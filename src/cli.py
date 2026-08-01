@@ -1,4 +1,5 @@
 import fire  # pyright: ignore[reportMissingTypeStubs]
+from .indexer import RepositoryIndexer
 
 
 class RAGCLI:
@@ -7,6 +8,8 @@ class RAGCLI:
     def index(self, max_chunk_size: int = 2000):
         """Builds indexing from the raw repository."""
         print(f"Beggining indexing with max_chunk_size:{max_chunk_size}...")
+        indexer = RepositoryIndexer()
+        indexer.build_index(max_chunk_size)
 
     def search(self, query: str, k: int):
         """Returns top-k sources in a single query."""
