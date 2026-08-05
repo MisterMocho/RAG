@@ -1,0 +1,14 @@
+# Ignorar ambientes virtuais
+.venv/
+env/
+
+# Ignorar dados processados e ficheiros descarregados
+data/processed/
+data/raw/
+*.pkl
+*.bin
+
+# Ignorar cache do Python e do Pylance
+__pycache__/
+.mypy_cache/
+.pytest_cache/
