@@ -58,7 +58,7 @@ class RepositoryIndexer:
                     all_chunks.extend(chunks)
 
                 except Exception as e:
-                    print(f"Erro ao ler o ficheiro {file_path}: {e}")
+                    print(f"Error reading {file_path}: {e}")
 
         return all_chunks
 
@@ -71,6 +71,7 @@ class RepositoryIndexer:
                 "Warning: No chunk has been generated.\n"
                 "Please check if the folder data/raw has the correct files"
                 )
+            return
         print(f"There was {len(chunks)} chunks generated.")
         print("Building BM25 index...")
         # Extracting text of each chunk to the BM25 Analyzer
@@ -83,6 +84,8 @@ class RepositoryIndexer:
         # Stores index and chunks on the Drive
         print("Storing indexes...")
         retriever.save(str(self.processed_data_path / "bm25_index"))
-        with open(self.processed_data_path / "chunks.pkl", "wb") as f:
+        chunks_dir = self.processed_data_path / "chunks"
+        chunks_dir.mkdir(parents=True, exist_ok=True)
+        with open(chunks_dir / "chunks.pkl", "wb") as f:
             pickle.dump(chunks, f)
         print("Indexing concluded! Files stored in data/processed/")

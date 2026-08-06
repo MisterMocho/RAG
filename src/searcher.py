@@ -17,7 +17,8 @@ class RepositorySearcher:
     def __init__(self, processed_data_path: str = "data/processed") -> None:
         self.processed_data_path: Path = Path(processed_data_path)
         self.index_dir: Path = self.processed_data_path / "bm25_index"
-        self.chunks_file: Path = self.processed_data_path / "chunks.pkl"
+        self.chunks_file: Path = (self.processed_data_path / "chunks"
+                                  / "chunks.pkl")
         # Variables that store the model and memory pieces on the memory
         self.retriever: Any = None
         self.chunks: List[Any] = []

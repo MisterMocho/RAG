@@ -31,11 +31,12 @@ class RAGCLI:
         searcher = RepositorySearcher()
         results = searcher.search_dataset(dataset_path, k)
         if results:
+            input_path = Path(dataset_path)
             # Makes sure destination folder exists
             out_dir = Path(save_directory)
             out_dir.mkdir(parents=True, exist_ok=True)
             # Final name file
-            out_file = out_dir / "student_search_results.json"
+            out_file = out_dir / input_path.name
             # Stores Json on the drive
             with open(out_file, "w", encoding="utf-8") as f:
                 f.write(results.model_dump_json(indent=2))
