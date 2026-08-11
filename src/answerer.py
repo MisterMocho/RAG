@@ -27,7 +27,7 @@ class RepositoryAnswerer:
             device_map="auto" if self.device != "mps" else None
         )
         if self.device == "mps":
-            self.model.to("mps")
+            self.model.to("mps")  # type: ignore[arg-type]
         print("Model loaded successfully!")
 
     def _extract_context(self, sources: List[MinimalSource]) -> str:

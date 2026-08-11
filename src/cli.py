@@ -4,7 +4,7 @@ from .indexer import RepositoryIndexer
 class RAGCLI:
     """Comand Line interface for the RAG system."""
 
-    def index(self, max_chunk_size: int = 2000):
+    def index(self, max_chunk_size: int = 800) -> None:
         """Builds indexing from the raw repository."""
         print(f"Beggining indexing with max_chunk_size:{max_chunk_size}...")
         indexer = RepositoryIndexer()
@@ -42,7 +42,7 @@ class RAGCLI:
                 f.write(results.model_dump_json(indent=2))
             print(f"Success! Results stored in: {out_file}")
 
-    def answer(self, query: str, k: int = 5):
+    def answer(self, query: str, k: int = 5) -> None:
         """Generates an answer to a single query."""
         print(f"Generating answer to: '{query}'...")
         from .searcher import RepositorySearcher
@@ -61,7 +61,8 @@ class RAGCLI:
             print("No results found to answer the query.")
 
     def answer_dataset(
-            self, student_search_results_path: str, save_directory: str):
+            self, student_search_results_path: str,
+            save_directory: str) -> None:
         """Generates answers for all queries in a researched dataset."""
         from pathlib import Path
         from .answerer import RepositoryAnswerer
@@ -106,6 +107,9 @@ class RAGCLI:
             student_search_results_path: str,
             dataset_path: str,
             k: int = 10,
-            max_context_length: int = 2000):
+            max_context_length: int = 800) -> None:
         """Evaluates research quality locally (recall@k)"""
+        from .evaluator import SystemEvaluator
         print("Calculating evaluation metrics...")
+        evaluator = SystemEvaluator()
+        evaluator.evaluate(student_search_results_path, dataset_path, k)
