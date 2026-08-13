@@ -130,7 +130,7 @@ class RepositorySearcher:
             return None  # Fails gracefully if index loading failed
         search_result = MinimalSearchResults(
             question_id=str(uuid.uuid4()),
-            question=query,
+            question_str=query,
             retrieved_sources=sources
         )
         return StudentSearchResults(search_results=[search_result], k=k)
@@ -151,7 +151,7 @@ class RepositorySearcher:
             sources = self._retrieve_sources(q.question, k)
             all_results.append(MinimalSearchResults(
                 question_id=q.question_id,
-                question=q.question,
+                question_str=q.question,
                 retrieved_sources=sources
             ))
         # Returns None only if it failed to load index and got 0 sources

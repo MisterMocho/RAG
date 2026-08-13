@@ -66,7 +66,7 @@ class RepositoryAnswerer:
             {
                 "role": "user",
                 "content": f"Context:\n{context_text}\n\nQuestion: "
-                f"{search_result.question}"
+                f"{search_result.question_str}"
             }
         ]
         # Applies the template of native chat to the tokenizer
@@ -105,7 +105,7 @@ class RepositoryAnswerer:
             clean_text = "Error: The model ran out of tokens while thinking."
         return MinimalAnswer(
             question_id=search_result.question_id,
-            question=search_result.question,
+            question_str=search_result.question_str,
             retrieved_sources=search_result.retrieved_sources,
             answer=clean_text
         )

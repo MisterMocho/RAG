@@ -4,7 +4,7 @@ from .indexer import RepositoryIndexer
 class RAGCLI:
     """Comand Line interface for the RAG system."""
 
-    def index(self, max_chunk_size: int = 800) -> None:
+    def index(self, max_chunk_size: int = 2000) -> None:
         """Builds indexing from the raw repository."""
         print(f"Beggining indexing with max_chunk_size:{max_chunk_size}...")
         indexer = RepositoryIndexer()
@@ -107,7 +107,7 @@ class RAGCLI:
             student_search_results_path: str,
             dataset_path: str,
             k: int = 10,
-            max_context_length: int = 800) -> None:
+            max_context_length: int = 2000) -> None:
         """Evaluates research quality locally (recall@k)"""
         from .evaluator import SystemEvaluator
         print("Calculating evaluation metrics...")
