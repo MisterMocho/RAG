@@ -73,7 +73,8 @@ class RepositoryAnswerer:
         text_prompt = self.tokenizer.apply_chat_template(
             messages,
             tokenize=False,
-            add_generation_prompt=True
+            add_generation_prompt=True,
+            enable_thinking=False
         )
         # Converts text to tokens
         inputs = self.tokenizer(text_prompt,
@@ -91,18 +92,8 @@ class RepositoryAnswerer:
         # Decodes tokens back to text
         input_length = inputs.input_ids.shape[1]
         generated_tokens = outputs[0][input_length:]
-        generated_text = self.tokenizer.decode(generated_tokens,
-                                               skip_special_tokens=True)
-        import re
-        # Removes everything between <think> and </think>
-        clean_text = re.sub(r'<think>.*?</think>',
-                            '', generated_text, flags=re.DOTALL)
-        # If it got cut in between thinking we get rid of the rest
-        clean_text = re.sub(r'<think>.*',
-                            '', clean_text, flags=re.DOTALL).strip()
-        # If cleanup fails because it spent all tokens thinking we warn
-        if not clean_text:
-            clean_text = "Error: The model ran out of tokens while thinking."
+        clean_text = self.tokenizer.decode(generated_tokens,
+                                           skip_special_tokens=True).strip()
         return MinimalAnswer(
             question_id=search_result.question_id,
             question_str=search_result.question_str,

@@ -42,23 +42,41 @@ class RAGCLI:
                 f.write(results.model_dump_json(indent=2))
             print(f"Success! Results stored in: {out_file}")
 
-    def answer(self, query: str, k: int = 5) -> None:
-        """Generates an answer to a single query."""
-        print(f"Generating answer to: '{query}'...")
+    def answer(self, query: str, k: int = 5,
+               sav_dir: str = "data/output/search_results_and_answer") -> None:
+        """Generates an answer to a single query and outputs valid JSON."""
+        import json
+        from pathlib import Path
         from .searcher import RepositorySearcher
         from .answerer import RepositoryAnswerer
-        # Researches sources
+        from .models import StudentSearchResultsAndAnswer
         searcher = RepositorySearcher()
         search_results = searcher.search(query, k)
         if search_results and search_results.search_results:
-            # 2. Passes the result to the LLM
             answerer = RepositoryAnswerer()
             final_answer = answerer.answer(search_results.search_results[0])
+            final_output = StudentSearchResultsAndAnswer(
+                search_results=[final_answer],
+                k=k
+            )
+            json_output = final_output.model_dump_json(indent=2)
+            # Imprime o JSON formatado diretamente na consola
             print("\n--- Answer ---")
             print(final_answer.answer)
-            print("--------------\n")
+            print("--------------")
+            # Lógica para gravar fisicamente na pasta correta
+            out_dir = Path(sav_dir)
+            out_dir.mkdir(parents=True, exist_ok=True)
+            # Creates a safe name for the file
+            safe_query = "".join(c if c.isalnum()
+                                 else "_" for c in query)[:30].strip("_")
+            out_file = out_dir / f"answer_{safe_query}.json"
+            with open(out_file, "w", encoding="utf-8") as f:
+                f.write(json_output)
+            print(f"\nSuccess! Answer saved to {out_file}")
         else:
-            print("No results found to answer the query.")
+            print(json.dumps({"error": "No result found to answer the query."},
+                             indent=2))
 
     def answer_dataset(
             self, student_search_results_path: str,
